@@ -1,4 +1,5 @@
-export const DEFAULT_API_BASE = "";
+// 默认 API 指向备用实例（主源 60s.viki.moe 限流；normalizeApiBaseInput 会自动补 /v2）
+export const DEFAULT_API_BASE = "https://60s.crystelf.top";
 
 export type ApiCategory =
 	| "periodic"
