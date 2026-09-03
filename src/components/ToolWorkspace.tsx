@@ -5,6 +5,9 @@ import {
 	Palette,
 	QrCode,
 	RefreshCw,
+	TerminalSquare,
+	CalendarClock,
+	Sparkles,
 } from "lucide-react";
 import { useCallback, useEffect, useState } from "react";
 import {
@@ -63,6 +66,36 @@ export function ToolWorkspace({
 							className={`tool-panel-wrap ${toolId === activeTool ? "featured" : ""}`}
 						>
 							<PasswordTool apiBase={apiBase} />
+						</div>
+					);
+				}
+				if (toolId === "kfc") {
+					return (
+						<div
+							key={toolId}
+							className={`tool-panel-wrap ${toolId === activeTool ? "featured" : ""}`}
+						>
+							<KfcTool apiBase={apiBase} />
+						</div>
+					);
+				}
+				if (toolId === "ip") {
+					return (
+						<div
+							key={toolId}
+							className={`tool-panel-wrap ${toolId === activeTool ? "featured" : ""}`}
+						>
+							<IpTool apiBase={apiBase} />
+						</div>
+					);
+				}
+				if (toolId === "lunar") {
+					return (
+						<div
+							key={toolId}
+							className={`tool-panel-wrap ${toolId === activeTool ? "featured" : ""}`}
+						>
+							<LunarTool apiBase={apiBase} />
 						</div>
 					);
 				}
@@ -433,6 +466,260 @@ function PaletteTool({ apiBase }: { apiBase: string }) {
 							</div>
 						</div>
 					))}
+				</div>
+			</div>
+		</article>
+	);
+}
+
+function KfcTool({ apiBase }: { apiBase: string }) {
+	const [result, setResult] = useState<ApiState<{ kfc?: string }>>({
+		loading: false,
+	});
+	const hasApiBase = Boolean(apiBase.trim());
+
+	const run = useCallback(async () => {
+		if (!hasApiBase) {
+			setResult({ loading: false });
+			return;
+		}
+		setResult({ loading: true });
+		try {
+			const payload = await fetchApi<{ kfc?: string }>(apiBase, "/kfc", {});
+			setResult({
+				loading: false,
+				data: unwrap(payload),
+				updatedAt: new Date(),
+			});
+		} catch (error) {
+			setResult({
+				loading: false,
+				error: error instanceof Error ? error.message : "请求失败",
+			});
+		}
+	}, [apiBase, hasApiBase]);
+
+	useEffect(() => {
+		void run();
+	}, [run]);
+
+	return (
+		<article className="card tool-panel">
+			<CardTitle
+				icon={<Sparkles size={20} />}
+				title="疯狂星期四文案"
+				right={<Status state={result} />}
+			/>
+			<div className="tool-panel-body">
+				<div className="tool-result-card highlight">
+					<small>今日文案</small>
+					<b>{result.data?.kfc || (result.loading ? "正在读取..." : "--")}</b>
+				</div>
+				<div className="tool-actions">
+					<button
+						type="button"
+						className="primary-subtle"
+						onClick={() => void run()}
+						disabled={!hasApiBase}
+					>
+						<RefreshCw size={16} /> 换一句
+					</button>
+					<button
+						type="button"
+						className="outline-button"
+						onClick={() => navigator.clipboard?.writeText(result.data?.kfc || "")}
+					>
+						<Copy size={16} /> 复制文案
+					</button>
+				</div>
+			</div>
+		</article>
+	);
+}
+
+function IpTool({ apiBase }: { apiBase: string }) {
+	type IpResult = {
+		ip?: string;
+		country?: string;
+		prov?: string;
+		city?: string;
+		timezone?: string;
+		isp?: string;
+	};
+	const [result, setResult] = useState<ApiState<IpResult>>({ loading: false });
+	const hasApiBase = Boolean(apiBase.trim());
+
+	const run = useCallback(async () => {
+		if (!hasApiBase) {
+			setResult({ loading: false });
+			return;
+		}
+		setResult({ loading: true });
+		try {
+			const payload = await fetchApi<IpResult>(apiBase, "/ip", {});
+			setResult({
+				loading: false,
+				data: unwrap(payload),
+				updatedAt: new Date(),
+			});
+		} catch (error) {
+			setResult({
+				loading: false,
+				error: error instanceof Error ? error.message : "请求失败",
+			});
+		}
+	}, [apiBase, hasApiBase]);
+
+	useEffect(() => {
+		void run();
+	}, [run]);
+
+	const location = [result.data?.country, result.data?.prov, result.data?.city]
+		.filter(Boolean)
+		.join(" ");
+
+	return (
+		<article className="card tool-panel">
+			<CardTitle
+				icon={<TerminalSquare size={20} />}
+				title="公网 IP"
+				right={<Status state={result} />}
+			/>
+			<div className="tool-panel-body">
+				<div className="tool-result-grid">
+					<div className="tool-result-card highlight">
+						<small>IP 地址</small>
+						<b>{result.data?.ip || "--"}</b>
+						<em>{result.data?.isp || ""}</em>
+					</div>
+					<div className="tool-result-card">
+						<small>归属地</small>
+						<b>{location || "--"}</b>
+						<em>{result.data?.timezone || ""}</em>
+					</div>
+				</div>
+				<div className="tool-actions">
+					<button
+						type="button"
+						className="primary-subtle"
+						onClick={() => void run()}
+						disabled={!hasApiBase}
+					>
+						<RefreshCw size={16} /> 重新查询
+					</button>
+					<button
+						type="button"
+						className="outline-button"
+						onClick={() => navigator.clipboard?.writeText(result.data?.ip || "")}
+					>
+						<Copy size={16} /> 复制 IP
+					</button>
+				</div>
+			</div>
+		</article>
+	);
+}
+
+function LunarTool({ apiBase }: { apiBase: string }) {
+	type LunarResult = {
+		solar?: {
+			full?: string;
+			week_desc?: string;
+			season_name?: string;
+		};
+		lunar?: {
+			desc_short?: string;
+			year_desc?: string;
+			month_desc?: string;
+			day_desc?: string;
+		};
+		stats?: {
+			day_of_year?: number;
+			percents_formatted?: {
+				year?: string;
+				month?: string;
+			};
+		};
+		term?: {
+			today?: string | null;
+			stage?: { name?: string } | null;
+		};
+		zodiac?: { year?: string };
+	};
+	const [result, setResult] = useState<ApiState<LunarResult>>({ loading: false });
+	const hasApiBase = Boolean(apiBase.trim());
+
+	const run = useCallback(async () => {
+		if (!hasApiBase) {
+			setResult({ loading: false });
+			return;
+		}
+		setResult({ loading: true });
+		try {
+			const payload = await fetchApi<LunarResult>(apiBase, "/lunar", {});
+			setResult({
+				loading: false,
+				data: unwrap(payload),
+				updatedAt: new Date(),
+			});
+		} catch (error) {
+			setResult({
+				loading: false,
+				error: error instanceof Error ? error.message : "请求失败",
+			});
+		}
+	}, [apiBase, hasApiBase]);
+
+	useEffect(() => {
+		void run();
+	}, [run]);
+
+	const lunarFull = result.data?.lunar?.desc_short || "--";
+	const termText =
+		result.data?.term?.today ||
+		(result.data?.term?.stage?.name
+			? `${result.data.term.stage.name}进行中`
+			: "");
+
+	return (
+		<article className="card tool-panel">
+			<CardTitle
+				icon={<CalendarClock size={20} />}
+				title="农历信息"
+				right={<Status state={result} />}
+			/>
+			<div className="tool-panel-body">
+				<div className="tool-result-grid">
+					<div className="tool-result-card highlight">
+						<small>农历</small>
+						<b>{lunarFull}</b>
+						<em>{result.data?.zodiac?.year || ""}</em>
+					</div>
+					<div className="tool-result-card">
+						<small>公历</small>
+						<b>
+							{result.data?.solar?.full || "--"}{" "}
+							{result.data?.solar?.week_desc || ""}
+						</b>
+						<em>{termText}</em>
+					</div>
+				</div>
+				<div className="tool-result-grid">
+					<div className="tool-result-card">
+						<small>今年第几天</small>
+						<b>第 {result.data?.stats?.day_of_year ?? "--"} 天</b>
+						<em>年度已过 {result.data?.stats?.percents_formatted?.year || "--"}</em>
+					</div>
+				</div>
+				<div className="tool-actions">
+					<button
+						type="button"
+						className="primary-subtle"
+						onClick={() => void run()}
+						disabled={!hasApiBase}
+					>
+						<RefreshCw size={16} /> 刷新
+					</button>
 				</div>
 			</div>
 		</article>

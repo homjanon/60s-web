@@ -83,6 +83,11 @@ export const hotBoards: Array<{
 	{ id: "baidu", title: "百度热搜", path: "/baidu/hot" },
 	{ id: "rednote", title: "小红书热点", path: "/rednote" },
 	{ id: "hacker-news", title: "Hacker News", path: "/hacker-news/top", params: { limit: "12" } },
+	{ id: "douban-movie", title: "豆瓣口碑电影", path: "/douban/weekly/movie" },
+	{ id: "douban-tv-cn", title: "豆瓣华语剧集", path: "/douban/weekly/tv_chinese" },
+	{ id: "douban-tv-global", title: "豆瓣全球剧集", path: "/douban/weekly/tv_global" },
+	{ id: "douban-show-cn", title: "豆瓣华语综艺", path: "/douban/weekly/show_chinese" },
+	{ id: "douban-show-global", title: "豆瓣全球综艺", path: "/douban/weekly/show_global" },
 ];
 
 export const defaultHotBoardPreferences: HotBoardId[] = [
@@ -308,6 +313,24 @@ export const toolDefinitions: ToolDefinition[] = [
 		icon: Palette,
 		label: "配色",
 		sub: "色彩搭配",
+	},
+	{
+		id: "kfc",
+		icon: Sparkles,
+		label: "疯狂星期四",
+		sub: "KFC 文案",
+	},
+	{
+		id: "ip",
+		icon: TerminalSquare,
+		label: "公网 IP",
+		sub: "本机出口信息",
+	},
+	{
+		id: "lunar",
+		icon: CalendarClock,
+		label: "农历",
+		sub: "今日农历节气",
 	},
 ];
 

@@ -7,9 +7,7 @@ import {
 	ShieldCheck,
 } from "lucide-react";
 import {
-	type EpicGame,
 	type ExchangeRate,
-	formatHotValue,
 	type FuelPrice,
 	type GoldPrice,
 	type HotItem,
@@ -74,75 +72,64 @@ export function MarketStrip({
 	);
 }
 
+function DoubanRankRows({ items }: { items: HotItem[] }) {
+	return (
+		<>
+			{items.map((item, index) => {
+				const rating =
+					typeof item.score === "number" || typeof item.score === "string"
+						? Number(item.score).toFixed(1)
+						: "";
+				return (
+					<a
+						className="compact-row"
+						key={`${item.title || index}`}
+						href={item.url || "#"}
+						target="_blank"
+						rel="noreferrer"
+					>
+						<span>{index + 1}</span>
+						<b>{item.title}</b>
+						{rating && <small>⭐ {rating}</small>}
+					</a>
+				);
+			})}
+		</>
+	);
+}
+
 export function EntertainmentCard({
-	epic,
 	movies,
+	tvItems,
 	apiReady,
 }: {
-	epic: ApiState<EpicGame[]>;
 	movies: HotItem[];
+	tvItems: HotItem[];
 	apiReady: boolean;
 }) {
-	const games = epic.data?.slice(0, 2) ?? [];
 	return (
 		<article className="card entertainment">
 			<CardTitle icon={<Film size={21} />} title="影视与娱乐" />
 			<div className="entertainment-sections">
 				<div className="mini-section">
 					<div className="mini-heading">
-						<b>电影票房</b>
-						<small>实时</small>
+						<b>豆瓣口碑电影</b>
+						<small>周榜</small>
 					</div>
 					{movies.length === 0 && (
-						apiReady ? <p className="muted">正在读取票房...</p> : null
+						apiReady ? <p className="muted">正在读取影单...</p> : null
 					)}
-					{movies.map((movie, index) => (
-						<div
-							className="compact-row"
-							key={`${movie.title || movie.name || movie.movie_name}-${index}`}
-						>
-							<span>{index + 1}</span>
-							<b>{movie.title || movie.name || movie.movie_name}</b>
-							<small>
-								{movie.box_office_desc ||
-									formatHotValue(movie.hot_value ?? movie.score ?? movie.heat)}
-							</small>
-						</div>
-					))}
+					<DoubanRankRows items={movies} />
 				</div>
-				<div className="mini-section game-list">
+				<div className="mini-section">
 					<div className="mini-heading">
-						<b>Epic 本周免费游戏</b>
-						<small>每周</small>
+						<b>豆瓣华语剧集</b>
+						<small>周榜</small>
 					</div>
-					{games.length === 0 && (
-						apiReady ? <p className="muted">正在读取游戏...</p> : null
+					{tvItems.length === 0 && (
+						apiReady ? <p className="muted">正在读取剧集...</p> : null
 					)}
-					{games.map((game) => (
-						<a
-							className="game-row"
-							key={game.id}
-							href={game.link}
-							target="_blank"
-							rel="noreferrer"
-						>
-							<img
-								src={game.cover || EPIC_COVER_PLACEHOLDER}
-								alt=""
-								onError={(event) => {
-									event.currentTarget.src = EPIC_COVER_PLACEHOLDER;
-								}}
-							/>
-							<span>
-								<b>{game.title}</b>
-								<small>
-									{game.is_free_now
-										? "限时免费领取"
-										: game.original_price_desc || "即将免费"}
-								</small>
-							</span>
-						</a>
-					))}
+					<DoubanRankRows items={tvItems} />
 				</div>
 			</div>
 		</article>
@@ -181,6 +168,9 @@ export function ToolShortcuts({
 						palette: tryBuildUrl(apiBase, "/color/palette", {
 							color: "#0f9b8e",
 						}),
+						kfc: "",
+						ip: "",
+						lunar: "",
 					};
 					const href = hrefMap[tool.id];
 

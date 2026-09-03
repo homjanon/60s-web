@@ -1,6 +1,5 @@
 import {
 	type DailyNews,
-	type EpicGame,
 	type ExchangeRate,
 	type FuelPrice,
 	type GoldPrice,
@@ -54,8 +53,8 @@ type HomePageProps = {
 	hotTabs: Array<(typeof allHotTabs)[number]>;
 	hot: ApiState<unknown> & { reload: () => void };
 	hotItems: HotItem[];
-	epic: ApiState<EpicGame[]>;
 	movieItems: HotItem[];
+	tvItems: HotItem[];
 	hitokoto?: unknown;
 	homeCardLayout: HomeCardLayout;
 	setHomeCardLayout: (layout: HomeCardLayout) => void;
@@ -77,8 +76,8 @@ export function HomePage({
 	hotTabs,
 	hot,
 	hotItems,
-	epic,
 	movieItems,
+	tvItems,
 	hitokoto,
 	homeCardLayout,
 	setHomeCardLayout,
@@ -305,8 +304,8 @@ export function HomePage({
 		if (cardId === "entertainmentTools") {
 			return (
 				<EntertainmentCard
-					epic={epic}
 					movies={movieItems}
+					tvItems={tvItems}
 					apiReady={apiReady}
 				/>
 			);

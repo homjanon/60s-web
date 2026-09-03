@@ -9,3 +9,6 @@ vite.config.d.ts
 .wrangler
 .dev.vars
 .dev.vars.*
+
+.npmcache/
+preview.log

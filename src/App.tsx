@@ -14,7 +14,7 @@ import {
 import {
 	type DailyNews,
 	DEFAULT_API_BASE,
-	type EpicGame,
+	type DoubanItem,
 	type ExchangeRate,
 	endpoints,
 	type FuelPrice,
@@ -584,15 +584,15 @@ export function App() {
 		{ currency: "CNY" },
 		hasApiBase,
 	);
-	const epic = useApi<EpicGame[]>(
+	const doubanMovie = useApi<DoubanItem[]>(
 		apiBase,
-		"/epic",
+		"/douban/weekly/movie",
 		{},
 		hasApiBase,
 	);
-	const maoyan = useApi<unknown>(
+	const doubanTvCn = useApi<DoubanItem[]>(
 		apiBase,
-		"/maoyan/realtime/movie",
+		"/douban/weekly/tv_chinese",
 		{},
 		hasApiBase,
 	);
@@ -605,8 +605,12 @@ export function App() {
 
 	const hotItems = useMemo(() => toItems(hot.data).slice(0, 10), [hot.data]);
 	const movieItems = useMemo(
-		() => toItems(maoyan.data).slice(0, 4),
-		[maoyan.data],
+		() => toItems(doubanMovie.data).slice(0, 4),
+		[doubanMovie.data],
+	);
+	const tvItems = useMemo(
+		() => toItems(doubanTvCn.data).slice(0, 3),
+		[doubanTvCn.data],
 	);
 
 	useEffect(() => {
@@ -1024,8 +1028,8 @@ export function App() {
 						hotTabs={visibleHotTabs}
 						hot={hot}
 						hotItems={hotItems}
-						epic={epic}
 						movieItems={movieItems}
+						tvItems={tvItems}
 						hitokoto={hitokoto.data}
 						homeCardLayout={homeCardLayout}
 						setHomeCardLayout={setHomeCardLayout}

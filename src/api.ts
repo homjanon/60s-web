@@ -58,6 +58,7 @@ export type HotItem = {
 	desc?: string;
 	link?: string;
 	url?: string;
+	cover?: string;
 };
 
 export type WeatherRealtime = {
@@ -144,6 +145,23 @@ export type EpicGame = {
 	free_start?: string;
 	free_end?: string;
 	link?: string;
+};
+
+export type DoubanItem = {
+	rank?: number;
+	title?: string;
+	id?: string;
+	rating?: number;
+	rating_count?: number;
+	good_rate?: number;
+	trend?: string;
+	rank_change?: number;
+	card_subtitle?: string;
+	description?: string;
+	cover?: string;
+	cover_proxy?: string;
+	url?: string;
+	tags?: string[];
 };
 
 export type FuelPrice = {

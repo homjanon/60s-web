@@ -16,7 +16,7 @@ export type SettingsState = {
 };
 
 export type PageId = "home" | "hot" | "news" | "weather" | "tools" | "settings";
-export type ToolId = "translate" | "qrcode" | "password" | "palette";
+export type ToolId = "translate" | "qrcode" | "password" | "palette" | "kfc" | "ip" | "lunar";
 export type SearchProviderId = "bing" | "google" | "chatgpt" | "doubao";
 export type EndpointFavoriteId = string;
 export type HotBoardId =
@@ -27,7 +27,12 @@ export type HotBoardId =
 	| "toutiao"
 	| "baidu"
 	| "rednote"
-	| "hacker-news";
+	| "hacker-news"
+	| "douban-movie"
+	| "douban-tv-cn"
+	| "douban-tv-global"
+	| "douban-show-cn"
+	| "douban-show-global";
 export type QuickFavoriteId =
 	| "daily"
 	| "hot-weibo"
